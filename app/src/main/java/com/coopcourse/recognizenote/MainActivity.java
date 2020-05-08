@@ -13,13 +13,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 public class MainActivity extends AppCompatActivity {
     private int PICKFILE_RESULT_CODE = 1;
-
+    private int EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE = 2;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter recyclerViewAdapter;
+    FloatingActionButton fab;
+    ItemDataBase DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +36,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ItemDataBase DB = createDB();
-        RecyclerView recyclerView = createRecycleView(DB);
+        /*Set up database*/
+        DB = Room.databaseBuilder(
+                getApplicationContext(), ItemDataBase.class, "items_db")
+                .allowMainThreadQueries()// QUICK FIX [ASYNC TASK NEEDED]
+                .build();//createDB();
+        recyclerView = createRecycleView(DB);
 
+        /*FloatingActionButton listening*/
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Implement add note", Snackbar.LENGTH_SHORT)// TODO: implement add note
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     @Override
@@ -41,14 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.search_item) {
+        int id = item.getItemId();  //getting id of selected menu item
+        if (id == R.id.camera_item) {
             Toast.makeText(this, "CAMERA_ACTIVITY_OPEN", Toast.LENGTH_SHORT).show();
         }
         if (id == R.id.explorer_item) { // StartActivityForResult
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
             chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-            chooseFile.setType("*/*");// TODO: Set only images types
+            chooseFile.setType("*/*");  //TODO: Set only images types
             startActivityForResult(
                     Intent.createChooser(chooseFile, "Choose a file"),
                     PICKFILE_RESULT_CODE
@@ -62,19 +83,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {// getting URI of selected in file explorer picture
             String URI = data.getData().toString();// TODO: Get correct URI to file
             Toast.makeText(this, URI, Toast.LENGTH_SHORT).show();
             Log.d("URI", URI);
         }
-
+        if (requestCode == EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE) {
+            recyclerViewAdapter.notifyDataSetChanged(); //updating recyclerView after closing EditTextActivity
+        }
     }
-
 
     private RecyclerView createRecycleView(ItemDataBase DB) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RecViewAdapter(this, DB));
+        recyclerViewAdapter = new RecViewAdapter(this, DB);
+        recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerView;
     }
 
@@ -86,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         DB.itemDao().clearTable();
-        DB.itemDao().insertItem(new RecViewItemTable("WOW", "14:00"));
-        DB.itemDao().insertItem(new RecViewItemTable("KOPOW", "15:00"));
-        DB.itemDao().insertItem(new RecViewItemTable("SUPERWOW", "16:00"));
-        DB.itemDao().insertItem(new RecViewItemTable("MEGAWOW", "17:00"));
-        DB.itemDao().insertItem(new RecViewItemTable("ULTRAWOW", "18:00"));
+        DB.itemDao().insertItem(new RecViewItemTable("WOW"));
+        DB.itemDao().insertItem(new RecViewItemTable("KOPOW"));
+        DB.itemDao().insertItem(new RecViewItemTable("SUPERWOW"));
+        DB.itemDao().insertItem(new RecViewItemTable("MEGAWOW"));
+        DB.itemDao().insertItem(new RecViewItemTable("ULTRAWOW"));
 
         return DB;
     }

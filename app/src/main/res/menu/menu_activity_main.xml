@@ -8,7 +8,7 @@
         android:title="@string/file_explorer"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/search_item"
+        android:id="@+id/camera_item"
         android:icon="@drawable/ic_photo_camera_black_24dp"
         android:orderInCategory="300"
         android:title="@string/camera"
