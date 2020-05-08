@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RecognizeNote</string>
+    <string name="camera">Camera</string>
+    <string name="file_explorer">File Explorer</string>
 </resources>

@@ -3,7 +3,7 @@ package com.coopcourse.recognizenote;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {RecViewItem.class}, version = 1)
+@Database(entities = {RecViewItemTable.class}, version = 1, exportSchema = false)
 public abstract class ItemDataBase extends RoomDatabase {
-    public abstract ItemDAO itemDAO();
+    public abstract ItemDao itemDao();
 }

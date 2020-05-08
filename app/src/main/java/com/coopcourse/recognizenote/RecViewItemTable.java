@@ -6,25 +6,24 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Item")
-public class RecViewItem {
+public class RecViewItemTable {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    int id;
     @ColumnInfo(name = "text")
-    public String text;
+    String text;
     @ColumnInfo(name = "dateTime")
-    public String dateTime;
+    String dateTime;
 
-    public RecViewItem(int id, String text, String dateTime) {
+    RecViewItemTable(int id, String text, String dateTime) {
         this.id = id;
         this.text = text;
         this.dateTime = dateTime;
     }
 
     @Ignore
-    public RecViewItem(String text, String dateTime) {
+    RecViewItemTable(String text, String dateTime) {
         this.text = text;
         this.dateTime = dateTime;
-
     }
 }
 

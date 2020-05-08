@@ -9,22 +9,25 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-interface ItemDAO {   // Data Access Object
+interface ItemDao {   // Data Access Object
     @Query("SELECT * FROM Item")
-    List<RecViewItem> getItems();
+    List<RecViewItemTable> getItems();
 
     @Query("SELECT * FROM Item LIMIT 1 OFFSET :position")
-    RecViewItem getItem(Integer position);
+    RecViewItemTable getItem(Integer position);
 
     @Query("SELECT COUNT(*) FROM Item")
     Integer itemCount();
 
+    @Query("DELETE FROM Item")
+    void clearTable();
+
     @Insert
-    void insertItem(RecViewItem item);
+    void insertItem(RecViewItemTable item);
 
     @Update
-    void updateItem(RecViewItem item);
+    void updateItem(RecViewItemTable item);
 
     @Delete
-    void deleteItem(RecViewItem item);
+    void deleteItem(RecViewItemTable item);
 }

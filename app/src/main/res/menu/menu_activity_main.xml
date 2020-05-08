@@ -2,10 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/search_item"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:id="@+id/explorer_item"
+        android:icon="@drawable/ic_explore_black_24dp"
         android:orderInCategory="300"
-        android:title="Search"
+        android:title="@string/file_explorer"
         app:showAsAction="ifRoom" />
-
+    <item
+        android:id="@+id/search_item"
+        android:icon="@drawable/ic_photo_camera_black_24dp"
+        android:orderInCategory="300"
+        android:title="@string/camera"
+        app:showAsAction="ifRoom" />
 </menu>
