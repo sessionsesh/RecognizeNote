@@ -1,13 +1,16 @@
 package com.coopcourse.recognizenote.adapters;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +27,7 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
     private AppCompatActivity context;
     private RecyclerView recyclerView;
 
-    static class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder{
         TextView recognizedText;
         TextView dateTime;
 
@@ -49,6 +52,8 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
         public TextView getDateTime() {
             return dateTime;
         }
+
+
     }
 
     public RecViewAdapter(AppCompatActivity context, ItemDataBase dataBase) {
@@ -68,7 +73,6 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         final View itemView = layoutInflater.inflate(R.layout.recycle_view_layout_item, parent, false);
 
-
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +86,48 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
                 intent.putExtra("id", id);
                 context.startActivityForResult(intent, EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE);
             }
+
         });
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int clickPosition = recyclerView.getChildLayoutPosition(itemView);
+
+                /*Choose menu*/
+                final CharSequence[] items = {"Edit", "Delete", "Nothing"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Select The Action");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch (item){
+                            case 0:
+                                Intent intent = new Intent(context, EditTextActivity.class);
+
+                                Integer id = dataBase.itemDao().getItem(clickPosition).id;
+                                String text = dataBase.itemDao().getItem(clickPosition).text;
+
+                                intent.putExtra("text", text);
+                                intent.putExtra("id", id);
+                                context.startActivityForResult(intent, EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE);
+                                break;
+                            case 1:
+                                dataBase.itemDao().deleteItem(dataBase.itemDao().getItem(clickPosition));
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                break;
+                            case 2:
+                                //do stuff
+                                break;
+                        }
+                    }
+                });
+                builder.show();
+                return true;
+
+            }
+        });
+
         return new CustomViewHolder(itemView);
     }
 

@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         int id = item.getItemId();  //getting id of selected menu item
         if (id == R.id.camera_item) {
             if (!allPermissionsGranted()) {
-                Log.d("PERMISS", "checked");
                 ActivityCompat.requestPermissions(
                         this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
             } else {
@@ -96,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 startActivityForResult(myIntent, CAMERA_ACTIVITY_RESULT_CODE);
             }
         }
-
 
         if (id == R.id.explorer_item) { // StartActivityForResult
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);

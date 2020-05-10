@@ -1,6 +1,7 @@
 package com.coopcourse.recognizenote.activities.camera;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.util.Log;
 import android.util.Size;
@@ -21,10 +22,12 @@ import androidx.lifecycle.LifecycleOwner;
 
 
 import com.coopcourse.recognizenote.TextImageAnalyzer;
+import com.coopcourse.recognizenote.activities.camera.crop.CropActivity;
+
 import java.io.File;
 import java.util.concurrent.Executors;
 
-public class CameraManager  {
+public class CameraManager {
     private TextImageAnalyzer mImageAnalyzer;
     private ImageCapture mImageCapture;
     private Preview mPreview;
@@ -35,13 +38,14 @@ public class CameraManager  {
 
     CameraManager(AppCompatActivity activity, TextureView cameraView) {
 
-        mContext=activity;
-        mActivity=activity;
+        mContext = activity;
+        mActivity = activity;
         mCameraView = cameraView;
     }
 
-    public void start()
-    {mCameraView.post(this::startThisCamera);}
+    void start() {
+        mCameraView.post(this::startThisCamera);
+    }
 
     public void clear() {
         CameraX.unbindAll();
@@ -100,7 +104,7 @@ public class CameraManager  {
     }
 
 
-    private void createImagePreview(){
+    private void createImagePreview() {
         PreviewConfig previewConfig = new PreviewConfig.Builder()
                 .setLensFacing(CameraX.LensFacing.BACK)
                 .build();
@@ -115,31 +119,30 @@ public class CameraManager  {
     }
 
 
-    void startThisCamera(){
+    public void startThisCamera() {
         CameraX.unbindAll();
-        if (!(mActivity.isFinishing()) && !(mActivity.isDestroyed()))
-        {
+        if (!(mActivity.isFinishing()) && !(mActivity.isDestroyed())) {
             createImagePreview();
             createImageCapture();
-            CameraX.bindToLifecycle((LifecycleOwner)mActivity, mPreview, mImageCapture);
+            CameraX.bindToLifecycle((LifecycleOwner) mActivity, mPreview, mImageCapture);
         }
     }
 
 
-    void captureImage(File file){
+    void captureImage(File file) {
         if (mImageCapture != null) {
             mImageCapture.takePicture(file, Executors.newSingleThreadExecutor(),
                     new ImageCapture.OnImageSavedListener() {
                         @Override
                         public void onImageSaved(@NonNull File file) {
                             Log.e("File saved", file.toString());
-                            TextImageAnalyzer.fromFile((Context)mActivity, file);
-                            //TODO(add crop)
-//                            Intent intent = new Intent(mContext, CropActivity.class);
-//                            intent.putExtra(CropActivity.IMAGE_PATH, file.getPath());
-//                            intent.putExtra(CropActivity.SCALE, true);
-//                            mActivity.startActivity(intent);
+                            TextImageAnalyzer.fromFile(mActivity, file);
+                            Intent intent = new Intent(mContext, CropActivity.class);
+                            intent.putExtra(CropActivity.IMAGE_PATH, file.getPath());
+                            intent.putExtra(CropActivity.SCALE, true);
+                            mActivity.startActivity(intent);
                         }
+
                         @Override
                         public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
                             Toast.makeText(
@@ -150,8 +153,6 @@ public class CameraManager  {
                     }
             );
         }
-
-
 
 
     }
