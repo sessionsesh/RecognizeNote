@@ -1,4 +1,4 @@
-package com.coopcourse.recognizenote;
+package com.coopcourse.recognizenote.activities;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,11 +8,16 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import com.coopcourse.recognizenote.R;
+import com.coopcourse.recognizenote.database.ItemDataBase;
+import com.coopcourse.recognizenote.database.RecViewItemTable;
+
 public class EditTextActivity extends AppCompatActivity {
     private EditText editText;
     private Bundle extras;
     ItemDataBase DB;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_text_activity);

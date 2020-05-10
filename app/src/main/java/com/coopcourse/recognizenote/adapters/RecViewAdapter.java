@@ -1,7 +1,5 @@
-package com.coopcourse.recognizenote;
+package com.coopcourse.recognizenote.adapters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.coopcourse.recognizenote.R;
+import com.coopcourse.recognizenote.activities.EditTextActivity;
+import com.coopcourse.recognizenote.database.ItemDataBase;
+import com.coopcourse.recognizenote.database.RecViewItemTable;
 
 import java.util.Date;
 
@@ -48,7 +51,7 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
         }
     }
 
-    RecViewAdapter(AppCompatActivity context, ItemDataBase dataBase) {
+    public RecViewAdapter(AppCompatActivity context, ItemDataBase dataBase) {
         this.dataBase = dataBase;
         this.context = context;
     }

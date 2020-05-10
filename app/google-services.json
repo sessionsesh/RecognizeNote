@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1031401113752",
+    "firebase_url": "https://my-project-1574874666393.firebaseio.com",
+    "project_id": "my-project-1574874666393",
+    "storage_bucket": "my-project-1574874666393.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031401113752:android:2fda13d88be7a139e368ed",
+        "android_client_info": {
+          "package_name": "com.coopcourse.recognizenote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031401113752-6q2j5v75q90m9l7k2857urotjdoh22qb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQPes5ENTfgY4ciRbDd3QNt3bxJHWgBWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031401113752-6q2j5v75q90m9l7k2857urotjdoh22qb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031401113752:android:36c8d230f2f256d3e368ed",
+        "android_client_info": {
+          "package_name": "com.example.documentreader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031401113752-6q2j5v75q90m9l7k2857urotjdoh22qb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQPes5ENTfgY4ciRbDd3QNt3bxJHWgBWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031401113752-6q2j5v75q90m9l7k2857urotjdoh22qb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

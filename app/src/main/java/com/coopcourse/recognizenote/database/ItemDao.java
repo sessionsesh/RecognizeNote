@@ -1,4 +1,4 @@
-package com.coopcourse.recognizenote;
+package com.coopcourse.recognizenote.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -9,7 +9,7 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-interface ItemDao {   // Data Access Object
+public interface ItemDao {   // Data Access Object
     @Query("SELECT * FROM Item")
     List<RecViewItemTable> getItems();
 

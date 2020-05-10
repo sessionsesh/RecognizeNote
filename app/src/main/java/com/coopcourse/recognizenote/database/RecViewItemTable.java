@@ -1,4 +1,4 @@
-package com.coopcourse.recognizenote;
+package com.coopcourse.recognizenote.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -12,20 +12,20 @@ import java.util.Date;
 @Entity(tableName = "Item")
 public class RecViewItemTable {
     @PrimaryKey(autoGenerate = true)
-    int id;
+    public int id;
     @ColumnInfo(name = "text")
-    String text;
+    public String text;
     @ColumnInfo(name = "dateTime")
-    Date dateTime;
+    public Date dateTime;
 
-    RecViewItemTable(int id, String text) {
+    public RecViewItemTable(int id, String text) {
         this.id = id;
         this.text = text;
         this.dateTime = Calendar.getInstance().getTime();
     }
 
     @Ignore
-    RecViewItemTable(String text) {
+    public RecViewItemTable(String text) {
         this.text = text;
         this.dateTime = Calendar.getInstance().getTime();
     }

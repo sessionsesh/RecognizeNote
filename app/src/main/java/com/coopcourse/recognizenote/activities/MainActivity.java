@@ -1,14 +1,21 @@
-package com.coopcourse.recognizenote;
+package com.coopcourse.recognizenote.activities;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,12 +25,25 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.coopcourse.recognizenote.R;
+import com.coopcourse.recognizenote.activities.camera.CameraActivity;
+import com.coopcourse.recognizenote.adapters.RecViewAdapter;
+import com.coopcourse.recognizenote.database.ItemDataBase;
+import com.coopcourse.recognizenote.database.RecViewItemTable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LifecycleOwner {
+    /*Permissions*/
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA};
+    private static final int REQUEST_CODE_PERMISSION = 10;
+
+    /*Result codes*/
     private int PICKFILE_RESULT_CODE = 1;
-    private int EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE = 2;
+    private int EDIT_TEXT_ACTIVITY_RESULT_CODE = 2;
+    private int CAMERA_ACTIVITY_RESULT_CODE = 3;
+
+    /*How to call it?*/
     RecyclerView recyclerView;
     RecyclerView.Adapter recyclerViewAdapter;
     FloatingActionButton fab;
@@ -35,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
+
 
         /*Set up database*/
         DB = Room.databaseBuilder(
@@ -64,8 +87,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();  //getting id of selected menu item
         if (id == R.id.camera_item) {
-            Toast.makeText(this, "CAMERA_ACTIVITY_OPEN", Toast.LENGTH_SHORT).show();
+            if (!allPermissionsGranted()) {
+                Log.d("PERMISS", "checked");
+                ActivityCompat.requestPermissions(
+                        this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
+            } else {
+                Intent myIntent = new Intent(this, CameraActivity.class);
+                startActivityForResult(myIntent, CAMERA_ACTIVITY_RESULT_CODE);
+            }
         }
+
+
         if (id == R.id.explorer_item) { // StartActivityForResult
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
             chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
@@ -74,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent.createChooser(chooseFile, "Choose a file"),
                     PICKFILE_RESULT_CODE
             );
-
             Toast.makeText(this, "EXPLORER_ACTIVITY_OPEN", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -83,22 +114,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {// getting URI of selected in file explorer picture
+
+        // getting URI of selected in file explorer picture
+        if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
             String URI = data.getData().toString();// TODO: Get correct URI to file
             Toast.makeText(this, URI, Toast.LENGTH_SHORT).show();
             Log.d("URI", URI);
         }
-        if (requestCode == EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE) {
-            recyclerViewAdapter.notifyDataSetChanged(); //updating recyclerView after closing EditTextActivity
+
+        //updating recyclerView after closing EditTextActivity
+        if (requestCode == EDIT_TEXT_ACTIVITY_RESULT_CODE ) {
+            recyclerViewAdapter.notifyDataSetChanged();
+        }
+
+        //updating recyclerView after closing CameraActivity
+        if (requestCode == CAMERA_ACTIVITY_RESULT_CODE){
+            recyclerViewAdapter.notifyDataSetChanged();
         }
     }
 
     private RecyclerView createRecycleView(ItemDataBase DB) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewAdapter = new RecViewAdapter(this, DB);
+        recyclerViewAdapter = new RecViewAdapter(MainActivity.this, DB);
         recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerView;
+    }
+
+
+    private boolean allPermissionsGranted() {
+        for (String perm : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getBaseContext(), perm) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //Methods for DB testing
@@ -117,5 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
         return DB;
     }
+
 
 }
