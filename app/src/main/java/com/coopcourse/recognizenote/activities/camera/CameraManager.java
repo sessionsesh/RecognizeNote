@@ -136,7 +136,7 @@ public class CameraManager {
                         @Override
                         public void onImageSaved(@NonNull File file) {
                             Log.e("File saved", file.toString());
-                            TextImageAnalyzer.fromFile(mActivity, file);
+                            //TextImageAnalyzer.fromFile(mActivity, file);
                             Intent intent = new Intent(mContext, CropActivity.class);
                             intent.putExtra(CropActivity.IMAGE_PATH, file.getPath());
                             intent.putExtra(CropActivity.SCALE, true);

@@ -1,11 +1,13 @@
 package com.coopcourse.recognizenote.adapters;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,15 +21,19 @@ import com.coopcourse.recognizenote.activities.EditTextActivity;
 import com.coopcourse.recognizenote.database.ItemDataBase;
 import com.coopcourse.recognizenote.database.RecViewItemTable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomViewHolder> {
+
+
     private int EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE = 2;
     private ItemDataBase dataBase;
     private AppCompatActivity context;
     private RecyclerView recyclerView;
 
-    static class CustomViewHolder extends RecyclerView.ViewHolder{
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
+        SimpleDateFormat dateFormatOut = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         TextView recognizedText;
         TextView dateTime;
 
@@ -41,8 +47,9 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
             recognizedText.setText(text);
         }
 
-        void setDateTime(Date time) {
-            dateTime.setText(time.toString());
+        void setDateTime(Date _dateTime) {
+            String formattedDate = dateFormatOut.format(_dateTime);
+            dateTime.setText(formattedDate);
         }
 
         public TextView getRecognizedText() {
@@ -84,7 +91,7 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
 
                 intent.putExtra("text", text);
                 intent.putExtra("id", id);
-                context.startActivityForResult(intent, EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE);
+                context.startActivityForResult(intent, EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE, ActivityOptions.makeSceneTransitionAnimation(context).toBundle());
             }
 
         });
@@ -101,7 +108,7 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
-                        switch (item){
+                        switch (item) {
                             case 0:
                                 Intent intent = new Intent(context, EditTextActivity.class);
 
@@ -117,14 +124,13 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
                                 recyclerView.getAdapter().notifyDataSetChanged();
                                 break;
                             case 2:
-                                //do stuff
+                                //do nothing
                                 break;
                         }
                     }
                 });
                 builder.show();
                 return true;
-
             }
         });
 

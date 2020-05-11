@@ -25,9 +25,7 @@ public class FileManager { //синглетный класс
 
     public File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat(("yyyyMMdd_HHmmss")).format(new Date());
-        File storageDir = mStorageImgDir; //this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File imgFile = File.createTempFile("JPEG_" + timeStamp + "_", ".jpg", mStorageImgDir);
-        // mCurrentPhotoPath = imgFile.getAbsolutePath();
         return imgFile;
     }
 

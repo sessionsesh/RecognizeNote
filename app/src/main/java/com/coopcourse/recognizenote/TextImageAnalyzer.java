@@ -4,6 +4,7 @@ package com.coopcourse.recognizenote;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import androidx.room.Room;
@@ -58,9 +59,11 @@ public class TextImageAnalyzer {//implements ImageAnalysis.Analyzer {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
+                        Toast.makeText(context, "Cannot recognize text", Toast.LENGTH_SHORT).show();
                         Log.e("Exception in recognizer", e.getMessage());
                     }
                 });
+        file.delete();
         return result;
     }
 }

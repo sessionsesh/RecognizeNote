@@ -20,9 +20,15 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.coopcourse.recognizenote.R;
+import com.coopcourse.recognizenote.TextImageAnalyzer;
+import com.coopcourse.recognizenote.activities.camera.FileManager;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -68,7 +74,6 @@ public class CropActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-
             mImagePath = extras.getString(IMAGE_PATH);
             mSaveUri = getImageUri(mImagePath);
             mBitmap = getBitmap(mImagePath);
@@ -99,15 +104,6 @@ public class CropActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         finish();
                     }
-                /*new View.OnClickListener() {
-            public void onClick(View v) {
-                //  view ->mProgressPanel.setVisibility(View.VISIBLE);
-                try {
-                    onSaveClicked();
-                } catch (Exception e) {
-                    finish();
-                }
-            }*/
                 });
 
         checkRotation();
@@ -170,17 +166,9 @@ public class CropActivity extends AppCompatActivity {
             canvas.drawBitmap(mBitmap, r, dstRect, null);
         }
         saveOutput(croppedImage); //сохраняем картинку по адресу
-        Bundle extras = new Bundle();
-         /* TextImageAnalyzer.fromFile(this, file);
-       /* Intent intent = new Intent(this, PreviewActivity.class);
-        intent.putExtras(extras);
-        intent.putExtra(IMAGE_PATH, mImagePath);
-        startActivity(intent);*/
+        File imageFile = new File(mSaveUri.getPath());
+        TextImageAnalyzer.fromFile(this, imageFile);
         finish();
-        //тут надо будет положить картиночку дальше
-
-        //  startActivity(intent);
-        //       finish();
     }
 
     private void closeStream(Closeable stream) {

@@ -16,7 +16,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,8 +74,16 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Implement add note", Snackbar.LENGTH_SHORT)// TODO: implement add note
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, EditTextActivity.class);
+                DB.itemDao().insertItem(new RecViewItemTable(""));
+
+                int last_item = DB.itemDao().itemCount() - 1;
+                Integer id = DB.itemDao().getItem(last_item).id;
+                String text = DB.itemDao().getItem(last_item).text;
+                intent.putExtra("text", text);
+                intent.putExtra("id", id);
+
+                startActivityForResult(intent, EDIT_TEXT_ACTIVITY_RESULT_CODE);
             }
         });
     }
@@ -104,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                     Intent.createChooser(chooseFile, "Choose a file"),
                     PICKFILE_RESULT_CODE
             );
-            Toast.makeText(this, "EXPLORER_ACTIVITY_OPEN", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -115,18 +125,16 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
         // getting URI of selected in file explorer picture
         if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
-            String URI = data.getData().toString();// TODO: Get correct URI to file
-            Toast.makeText(this, URI, Toast.LENGTH_SHORT).show();
-            Log.d("URI", URI);
+            Uri selectedImage = data.getData();
         }
 
         //updating recyclerView after closing EditTextActivity
-        if (requestCode == EDIT_TEXT_ACTIVITY_RESULT_CODE ) {
+        if (requestCode == EDIT_TEXT_ACTIVITY_RESULT_CODE) {
             recyclerViewAdapter.notifyDataSetChanged();
         }
 
         //updating recyclerView after closing CameraActivity
-        if (requestCode == CAMERA_ACTIVITY_RESULT_CODE){
+        if (requestCode == CAMERA_ACTIVITY_RESULT_CODE) {
             recyclerViewAdapter.notifyDataSetChanged();
         }
     }
@@ -139,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         return recyclerView;
     }
 
-
     private boolean allPermissionsGranted() {
         for (String perm : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getBaseContext(), perm) != PackageManager.PERMISSION_GRANTED) {
@@ -148,23 +155,4 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         }
         return true;
     }
-
-    //Methods for DB testing
-    private ItemDataBase createDB() {
-        ItemDataBase DB = Room.databaseBuilder(
-                getApplicationContext(), ItemDataBase.class, "items_db")
-                .allowMainThreadQueries()// QUICK FIX [ASYNC TASK NEEDED]
-                .build();
-
-        DB.itemDao().clearTable();
-        DB.itemDao().insertItem(new RecViewItemTable("WOW"));
-        DB.itemDao().insertItem(new RecViewItemTable("KOPOW"));
-        DB.itemDao().insertItem(new RecViewItemTable("SUPERWOW"));
-        DB.itemDao().insertItem(new RecViewItemTable("MEGAWOW"));
-        DB.itemDao().insertItem(new RecViewItemTable("ULTRAWOW"));
-
-        return DB;
-    }
-
-
 }

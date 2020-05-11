@@ -2,4 +2,6 @@
     <string name="app_name">RecognizeNote</string>
     <string name="camera">Camera</string>
     <string name="file_explorer">File Explorer</string>
+    <string name="favorite">Favorite</string>
+    <string name="delete">Delete</string>
 </resources>
