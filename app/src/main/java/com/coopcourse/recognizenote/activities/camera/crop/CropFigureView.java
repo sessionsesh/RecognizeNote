@@ -56,32 +56,8 @@ public class CropFigureView {
             return;
         }
         Path path = new Path();
-        if (!hasFocus()) {
             mOutlinePaint.setColor(0xFF000000);
             canvas.drawRect(mDrawRect, mOutlinePaint);
-        } else {
-            Rect viewDrawingRect = new Rect();
-            mContext.getDrawingRect(viewDrawingRect);
-                Rect topRect = new Rect(viewDrawingRect.left, viewDrawingRect.top, viewDrawingRect.right, mDrawRect.top);
-                if (topRect.width() > 0 && topRect.height() > 0) {
-                    canvas.drawRect(topRect, hasFocus() ? mFocusPaint : mNoFocusPaint);
-                }
-                Rect bottomRect = new Rect(viewDrawingRect.left, mDrawRect.bottom, viewDrawingRect.right, viewDrawingRect.bottom);
-                if (bottomRect.width() > 0 && bottomRect.height() > 0) {
-                    canvas.drawRect(bottomRect, hasFocus() ? mFocusPaint : mNoFocusPaint);
-                }
-                Rect leftRect = new Rect(viewDrawingRect.left, topRect.bottom, mDrawRect.left, bottomRect.top);
-                if (leftRect.width() > 0 && leftRect.height() > 0) {
-                    canvas.drawRect(leftRect, hasFocus() ? mFocusPaint : mNoFocusPaint);
-                }
-                Rect rightRect = new Rect(mDrawRect.right, topRect.bottom, viewDrawingRect.right, bottomRect.top);
-                if (rightRect.width() > 0 && rightRect.height() > 0) {
-                    canvas.drawRect(rightRect, hasFocus() ? mFocusPaint : mNoFocusPaint);
-                }
-
-                path.addRect(new RectF(mDrawRect), Path.Direction.CW);
-                mOutlinePaint.setColor(0xFFFF8A00);
-            }
             canvas.drawPath(path, mOutlinePaint);
         }
 
