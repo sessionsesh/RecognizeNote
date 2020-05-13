@@ -25,8 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomViewHolder> {
-
-
     private int EDIT_TEXT_ACTIVITY_FOR_RESULT_REQUEST_CODE = 2;
     private ItemDataBase dataBase;
     private AppCompatActivity context;

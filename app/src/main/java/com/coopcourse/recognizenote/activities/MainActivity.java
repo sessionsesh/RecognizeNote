@@ -40,7 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.net.URI;
 
-public class MainActivity extends AppCompatActivity implements LifecycleOwner {
+public class MainActivity extends AppCompatActivity{
     /*Permissions*/
     private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int REQUEST_CODE_PERMISSION = 10;
@@ -51,10 +51,12 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
     private int CAMERA_ACTIVITY_RESULT_CODE = 3;
     private int CROP_ACTIVITY_RESULT_CODE = 4;
 
-    /*How to call it?*/
+    /*Interface elements*/
     RecyclerView recyclerView;
     RecyclerView.Adapter recyclerViewAdapter;
     FloatingActionButton fab;
+
+    /*Database*/
     ItemDataBase DB;
 
     @Override
@@ -113,13 +115,18 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         }
 
         if (id == R.id.explorer_item) { // StartActivityForResult
-            Intent chooseFile = new Intent();
-            chooseFile.setAction(Intent.ACTION_GET_CONTENT);
-            chooseFile.setType("image/*");  //TODO: Set only images types
-            startActivityForResult(
-                    Intent.createChooser(chooseFile, "Select a picture"),
-                    PICKFILE_RESULT_CODE
-            );
+            if (!allPermissionsGranted()) {
+                ActivityCompat.requestPermissions(
+                        this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
+            }else{
+                Intent chooseFile = new Intent();
+                chooseFile.setAction(Intent.ACTION_GET_CONTENT);
+                chooseFile.setType("image/*");  //TODO: Set only images types
+                startActivityForResult(
+                        Intent.createChooser(chooseFile, "Select a picture"),
+                        PICKFILE_RESULT_CODE
+                );
+            }
         }
         return super.onOptionsItemSelected(item);
     }

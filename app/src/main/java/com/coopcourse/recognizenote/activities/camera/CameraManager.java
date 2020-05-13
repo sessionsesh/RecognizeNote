@@ -28,16 +28,13 @@ import java.io.File;
 import java.util.concurrent.Executors;
 
 public class CameraManager {
-    private TextImageAnalyzer mImageAnalyzer;
     private ImageCapture mImageCapture;
     private Preview mPreview;
-    private boolean mIsCompleted;
     private Context mContext;
     private TextureView mCameraView;
     private AppCompatActivity mActivity;
 
-    CameraManager(AppCompatActivity activity, TextureView cameraView) {
-
+        CameraManager(AppCompatActivity activity, TextureView cameraView) {
         mContext = activity;
         mActivity = activity;
         mCameraView = cameraView;
@@ -100,7 +97,7 @@ public class CameraManager {
                 .setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
                 .setLensFacing(CameraX.LensFacing.BACK)
                 .build();
-        mImageCapture = new ImageCapture(imageCaptureConfig);
+            mImageCapture = new ImageCapture(imageCaptureConfig);
     }
 
 

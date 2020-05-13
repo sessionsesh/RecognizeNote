@@ -85,7 +85,6 @@ public class EditTextActivity extends AppCompatActivity {
                 editText.setSelection(editText.getText().length());
                 InputMethodManager inputMethodMngr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodMngr.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-
             }
         });
     }
