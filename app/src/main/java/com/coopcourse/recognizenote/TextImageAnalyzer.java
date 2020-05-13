@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import androidx.room.Delete;
 import androidx.room.Room;
 
 import com.coopcourse.recognizenote.database.ItemDataBase;
@@ -27,12 +28,12 @@ import java.util.Arrays;
 
 public class TextImageAnalyzer {//implements ImageAnalysis.Analyzer {
 
-    public static Task<FirebaseVisionText> fromFile(Context context, File file) {
+
+    public static Task<FirebaseVisionText> fromFile(Context context, File file, boolean delete) {
         ItemDataBase DB = Room.databaseBuilder(
                 context, ItemDataBase.class, "items_db")
                 .allowMainThreadQueries()// QUICK FIX [ASYNC TASK NEEDED]
                 .build();
-
         FirebaseVisionImage image;
         Task<FirebaseVisionText> result = null;
         try {
@@ -63,7 +64,9 @@ public class TextImageAnalyzer {//implements ImageAnalysis.Analyzer {
                         Log.e("Exception in recognizer", e.getMessage());
                     }
                 });
-        file.delete();
+        if (delete) {
+            file.delete();
+        }
         return result;
     }
 }

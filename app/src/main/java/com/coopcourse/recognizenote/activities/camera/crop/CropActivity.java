@@ -2,6 +2,7 @@ package com.coopcourse.recognizenote.activities.camera.crop;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +59,8 @@ public class CropActivity extends AppCompatActivity {
     private boolean mCircleCrop = false;
     private boolean mScaleUp = true;
 
+    private boolean DELETE_IMAGE = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,7 @@ public class CropActivity extends AppCompatActivity {
             mSaveUri = getImageUri(mImagePath);
             mBitmap = getBitmap(mImagePath);
             mScale = extras.getBoolean(SCALE, true);
+            DELETE_IMAGE = extras.getBoolean("DELETE", true);
         }
 
         if (mBitmap == null) {
@@ -167,7 +172,7 @@ public class CropActivity extends AppCompatActivity {
         }
         saveOutput(croppedImage); //сохраняем картинку по адресу
         File imageFile = new File(mSaveUri.getPath());
-        TextImageAnalyzer.fromFile(this, imageFile);
+        TextImageAnalyzer.fromFile(this, imageFile, DELETE_IMAGE);
         finish();
     }
 

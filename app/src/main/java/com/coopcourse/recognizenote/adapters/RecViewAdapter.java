@@ -142,7 +142,6 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
         RecViewItemTable t_item = dataBase.itemDao().getItem(position);
         holder.setRecognizedText(t_item.text);
         holder.setDateTime(t_item.dateTime);
-
         Log.d("DB_ID", Integer.toString(t_item.id));
     }
 

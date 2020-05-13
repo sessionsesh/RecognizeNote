@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -30,21 +31,25 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.coopcourse.recognizenote.R;
 import com.coopcourse.recognizenote.activities.camera.CameraActivity;
+import com.coopcourse.recognizenote.activities.camera.crop.CropActivity;
 import com.coopcourse.recognizenote.adapters.RecViewAdapter;
 import com.coopcourse.recognizenote.database.ItemDataBase;
 import com.coopcourse.recognizenote.database.RecViewItemTable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.net.URI;
+
 public class MainActivity extends AppCompatActivity implements LifecycleOwner {
     /*Permissions*/
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA};
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int REQUEST_CODE_PERMISSION = 10;
 
     /*Result codes*/
     private int PICKFILE_RESULT_CODE = 1;
     private int EDIT_TEXT_ACTIVITY_RESULT_CODE = 2;
     private int CAMERA_ACTIVITY_RESULT_CODE = 3;
+    private int CROP_ACTIVITY_RESULT_CODE = 4;
 
     /*How to call it?*/
     RecyclerView recyclerView;
@@ -108,11 +113,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         }
 
         if (id == R.id.explorer_item) { // StartActivityForResult
-            Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-            chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-            chooseFile.setType("*/*");  //TODO: Set only images types
+            Intent chooseFile = new Intent();
+            chooseFile.setAction(Intent.ACTION_GET_CONTENT);
+            chooseFile.setType("image/*");  //TODO: Set only images types
             startActivityForResult(
-                    Intent.createChooser(chooseFile, "Choose a file"),
+                    Intent.createChooser(chooseFile, "Select a picture"),
                     PICKFILE_RESULT_CODE
             );
         }
@@ -126,6 +131,16 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         // getting URI of selected in file explorer picture
         if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
+            grantUriPermission(getPackageName(), selectedImage, 0);
+            String path = getImagePath(selectedImage);
+
+            //Starting crop activity
+            Intent intent = new Intent(this, CropActivity.class);
+            intent.putExtra(CropActivity.IMAGE_PATH, path);
+            Log.d("PATH", path);
+            intent.putExtra(CropActivity.SCALE, true);
+            intent.putExtra("DELETE",false);
+            startActivityForResult(intent, CROP_ACTIVITY_RESULT_CODE);
         }
 
         //updating recyclerView after closing EditTextActivity
@@ -137,6 +152,35 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         if (requestCode == CAMERA_ACTIVITY_RESULT_CODE) {
             recyclerViewAdapter.notifyDataSetChanged();
         }
+
+        if (requestCode == CROP_ACTIVITY_RESULT_CODE) {
+            Log.d("CROP","true");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewAdapter.notifyDataSetChanged();
+                }
+            }, 2000);
+
+        }
+    }
+
+    public String getImagePath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
     }
 
     private RecyclerView createRecycleView(ItemDataBase DB) {
