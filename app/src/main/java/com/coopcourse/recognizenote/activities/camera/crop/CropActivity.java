@@ -56,7 +56,6 @@ public class CropActivity extends AppCompatActivity {
     private int mImageMaxHeight;
     private int mImageMaxWidth;
     private CropFigureView mCrop;
-    private boolean mCircleCrop = false;
     private boolean mScaleUp = true;
 
     private boolean DELETE_IMAGE = true;
@@ -165,11 +164,9 @@ public class CropActivity extends AppCompatActivity {
         } catch (Exception e) {
             throw e;
         }
-        {
-            Canvas canvas = new Canvas(croppedImage);
-            Rect dstRect = new Rect(0, 0, width, height);
-            canvas.drawBitmap(mBitmap, r, dstRect, null);
-        }
+        Canvas canvas = new Canvas(croppedImage);
+        Rect dstRect = new Rect(0, 0, width, height);
+        canvas.drawBitmap(mBitmap, r, dstRect, null);
         saveOutput(croppedImage); //сохраняем картинку по адресу
         File imageFile = new File(mSaveUri.getPath());
         TextImageAnalyzer.fromFile(this, imageFile, DELETE_IMAGE);
