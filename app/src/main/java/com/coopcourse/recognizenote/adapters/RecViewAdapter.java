@@ -100,7 +100,7 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
                 int clickPosition = recyclerView.getChildLayoutPosition(itemView);
 
                 /*Choose menu*/
-                final CharSequence[] items = {"Edit", "Delete", "Nothing"};
+                final CharSequence[] items = {"Edit", "Delete", "Save"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Select The Action");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -122,7 +122,8 @@ public class RecViewAdapter extends RecyclerView.Adapter<RecViewAdapter.CustomVi
                                 recyclerView.getAdapter().notifyDataSetChanged();
                                 break;
                             case 2:
-                                //do nothing
+                                String filetext = dataBase.itemDao().getItem(clickPosition).text;
+                                FileManager.createTextFile(context, filetext);
                                 break;
                         }
                     }
