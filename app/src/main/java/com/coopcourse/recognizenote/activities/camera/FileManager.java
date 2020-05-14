@@ -29,5 +29,23 @@ public class FileManager { //синглетный класс
         return imgFile;
     }
 
+ public static void createTextFile(Context context, String text){
+        File appDir = new File(context.getExternalFilesDir(null)+"/RecognizeNote/");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
 
+        String timeStamp = new SimpleDateFormat(("yyyyMMdd_HHmmss")).format(new Date());
+        String filename = "Recognized_text"+timeStamp+".txt";
+        File textFile = new File(appDir, filename);
+        try {
+            textFile.createNewFile();
+            FileWriter f = new FileWriter(textFile);
+            f.write(text);
+            f.close();
+        }
+        catch (Exception ex){
+            Log.e("Saving error", ex.getMessage());}
+
+    }
 }
