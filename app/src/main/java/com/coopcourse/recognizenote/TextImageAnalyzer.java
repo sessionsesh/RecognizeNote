@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class TextImageAnalyzer {//implements ImageAnalysis.Analyzer {
+public class TextImageAnalyzer {
 
 
     public static Task<FirebaseVisionText> fromFile(Context context, File file, boolean delete) {
