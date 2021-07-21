@@ -1,7 +1,6 @@
 # RecognizeNote
 
 Text recognizer and Text saver application for android.
----
 
 # Usage flow
 
@@ -12,6 +11,6 @@ Text recognizer and Text saver application for android.
 # Example of usage
 ![img1](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img1.jpg)
 ![img2](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img2.jpg)
-![img3](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img3.jpg)
+![img3](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img3.jpg) </br>
 ![img4](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img4.jpg)
 ![img5](https://github.com/sessionsesh/RecognizeNote/blob/master/examples/img5.jpg)
